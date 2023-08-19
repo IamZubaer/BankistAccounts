@@ -144,6 +144,7 @@ btnLogin.addEventListener('click', function(e){
       labelWelcome.textContent = `Welcome back ${curAcc.owner.split(' ')[0]}!`
       containerApp.style.opacity = 100
   }
+  inputLoginUsername.value = inputLoginPin.value = ''
 })
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
