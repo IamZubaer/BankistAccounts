@@ -154,12 +154,23 @@ btnTransfer.addEventListener('click', function(e){
   e.preventDefault()
   const amount = Number(inputTransferAmount.value)
   const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
-  if(amount > 0 && amount < curAcc.balance && receiverAcc && receiverAcc.username !== curAcc.username){
+  if(amount > 0 && amount < curAcc.balance && receiverAcc && receiverAcc?.username !== curAcc.username){
     curAcc.movements.push(-amount)
     receiverAcc.movements.push(amount)
     displayUI(curAcc)
   }
   inputTransferTo.value = inputTransferAmount.value = '';
+})
+
+btnClose.addEventListener('click',function(e){
+  e.preventDefault()
+  if ( Number(inputClosePin.value) === curAcc.pin && inputCloseUsername.value === curAcc.username){
+    const index = accounts.findIndex(acc => acc.username === curAcc.username)
+    
+    containerApp.style.opacity = 0
+    accounts.splice(index,1)
+    inputClosePin.value = inputCloseUsername.value = '';
+  }
 })
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
