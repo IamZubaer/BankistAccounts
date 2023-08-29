@@ -90,13 +90,14 @@ const createUsername = function(accounts){
   })
 }
 createUsername(accounts)
-console.log(accounts)
 
 const balanceCalc = function(accounts){
-  const balance = accounts.movements.reduce(function(acc,mov){
+  accounts.balance = accounts.movements.reduce(function(acc,mov){
     return acc + mov
   },0)
-  labelBalance.textContent = `${balance}€`
+
+  labelBalance.textContent = `${accounts.balance}€`
+  console.log(accounts.balance, accounts)
 }
 
 
@@ -123,12 +124,16 @@ const dealing = function(accounts){
    return mov * (accounts.interestRate/100)
  }).reduce(function(acc,mov){
   return acc + mov
- })
+ },0)
  labelSumInterest.textContent = `${intBal}€`
  labelSumIn.textContent = `${depoBal}€`
  labelSumOut.textContent = `${Math.abs(withBal)}€`
 }
-
+ const displayUI = function(acc){
+  dealing(acc)
+  balanceCalc(acc)
+  displayMovements(acc.movements)
+ }
 
 let curAcc
 
@@ -138,13 +143,23 @@ btnLogin.addEventListener('click', function(e){
   curAcc = accounts.find(acc =>
     acc.username === inputLoginUsername.value)
   if(curAcc?.pin === Number(inputLoginPin.value)){
-      dealing(curAcc)
-      balanceCalc(curAcc)
-      displayMovements(curAcc.movements)
       labelWelcome.textContent = `Welcome back ${curAcc.owner.split(' ')[0]}!`
       containerApp.style.opacity = 100
+      displayUI(curAcc)
   }
   inputLoginUsername.value = inputLoginPin.value = ''
+})
+
+btnTransfer.addEventListener('click', function(e){
+  e.preventDefault()
+  const amount = Number(inputTransferAmount.value)
+  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+  if(amount > 0 && amount < curAcc.balance && receiverAcc && receiverAcc.username !== curAcc.username){
+    curAcc.movements.push(-amount)
+    receiverAcc.movements.push(amount)
+    displayUI(curAcc)
+  }
+  inputTransferTo.value = inputTransferAmount.value = '';
 })
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
