@@ -97,7 +97,6 @@ const balanceCalc = function(accounts){
   },0)
 
   labelBalance.textContent = `${accounts.balance}€`
-  console.log(accounts.balance, accounts)
 }
 
 
@@ -170,6 +169,15 @@ btnClose.addEventListener('click',function(e){
     containerApp.style.opacity = 0
     accounts.splice(index,1)
     inputClosePin.value = inputCloseUsername.value = '';
+  }
+})
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault()
+  const amount = Number(inputLoanAmount.value)
+  if(amount > 0 && curAcc.movements.some(mov => mov >= amount*0.1)){
+    curAcc.movements.push(amount)
+    displayUI(curAcc)
+    inputLoanAmount.value = ''
   }
 })
 /////////////////////////////////////////////////
